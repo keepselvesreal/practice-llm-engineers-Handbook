@@ -40,6 +40,8 @@ def load_model(
         model_name=model_name,
         max_seq_length=max_seq_length,
         load_in_4bit=load_in_4bit,
+        device_map="auto",  # GPU에 모델을 자동 배치
+        offload_state_dict=False,  # CPU 오프로딩 비활성화
     )
 
     model = FastLanguageModel.get_peft_model(
@@ -103,7 +105,8 @@ def finetune(
         dataset = concatenate_datasets([dataset1, dataset2])
         if is_dummy:
             try:
-                dataset = dataset.select(range(400))
+                # dataset = dataset.select(range(400))
+                dataset = dataset.select(range(7))
             except Exception:
                 print("Dummy mode active. Failed to trim the dataset to 400 samples.")  # noqa
         print(f"Loaded dataset with {len(dataset)} samples.")  # noqa
@@ -154,7 +157,8 @@ def finetune(
         dataset = load_dataset(f"{dataset_huggingface_workspace}/llmtwin-dpo", split="train")
         if is_dummy:
             try:
-                dataset = dataset.select(range(400))
+                # dataset = dataset.select(range(400))
+                dataset = dataset.select(range(7))
             except Exception:
                 print("Dummy mode active. Failed to trim the dataset to 400 samples.")  # noqa
         print(f"Loaded dataset with {len(dataset)} samples.")  # noqa
@@ -254,7 +258,7 @@ if __name__ == "__main__":
         help="Parameter to choose the finetuning stage.",
     )
 
-    parser.add_argument("--output_data_dir", type=str, default=os.environ["SM_OUTPUT_DATA_DIR"])
+    # parser.add_argument("--output_data_dir", type=str, default=os.environ["SM_OUTPUT_DATA_DIR"])
     parser.add_argument("--model_dir", type=str, default=os.environ["SM_MODEL_DIR"])
     parser.add_argument("--n_gpus", type=str, default=os.environ["SM_NUM_GPUS"])
 
@@ -268,7 +272,7 @@ if __name__ == "__main__":
     print(f"Training in dummy mode? '{args.is_dummy}'")  # noqa
     print(f"Finetuning type: '{args.finetuning_type}'")  # noqa
 
-    print(f"Output data dir: '{args.output_data_dir}'")  # noqa
+    # print(f"Output data dir: '{args.output_data_dir}'")
     print(f"Model dir: '{args.model_dir}'")  # noqa
     print(f"Number of GPUs: '{args.n_gpus}'")  # noqa
 

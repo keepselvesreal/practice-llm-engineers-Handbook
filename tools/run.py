@@ -166,14 +166,20 @@ def main(
         export_artifact_to_json.with_options(**pipeline_args)(**run_args_etl)
 
     if run_feature_engineering:
-        run_args_fe = {}
-        pipeline_args["config_path"] = root_dir / "configs" / "feature_engineering.yaml"
+        # run_args_fe = {}
+        run_args_fe = {
+            "author_full_names": [
+                "Maxime Labonne",
+            ]
+        }
+        # pipeline_args["config_path"] = root_dir / "configs" / "feature_engineering.yaml"
         pipeline_args["run_name"] = f"feature_engineering_run_{dt.now().strftime('%Y_%m_%d_%H_%M_%S')}"
         feature_engineering.with_options(**pipeline_args)(**run_args_fe)
 
     if run_generate_instruct_datasets:
-        run_args_cd = {}
-        pipeline_args["config_path"] = root_dir / "configs" / "generate_instruct_datasets.yaml"
+        # run_args_cd = {}
+        run_args_cd = {"mock": True, "dataset_id": "nadle/llmtwin"}
+        # pipeline_args["config_path"] = root_dir / "configs" / "generate_instruct_datasets.yaml"
         pipeline_args["run_name"] = f"generate_instruct_datasets_run_{dt.now().strftime('%Y_%m_%d_%H_%M_%S')}"
         generate_datasets.with_options(**pipeline_args)(**run_args_cd)
 

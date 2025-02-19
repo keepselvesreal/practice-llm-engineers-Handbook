@@ -175,3 +175,6 @@ run_ids.txt
 # Virtual environments
 *_venv
 *_myenv
+
+# ts 추가
+*cache*
